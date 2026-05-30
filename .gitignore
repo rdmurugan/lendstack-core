@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+dist/
+build/
+*.egg-info/
+.DS_Store
+# Never commit borrower documents or PII (synthetic samples are generated, not tracked)
+samples/
+loan_files/
+# Rendered underwriter packages (contain loan data)
+out/

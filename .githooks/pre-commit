@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Secret-guard pre-commit hook for lendstack-core.
+# Blocks commits that stage .env files or contain key/secret-looking values.
+# Enable once per clone:  git config core.hooksPath .githooks
+set -u
+
+fail() { echo "🛑 commit blocked by secret-guard: $1" >&2; }
+
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$staged" ] && exit 0
+
+problems=0
+
+# 1) Never allow a real .env (but allow .env.example/.sample/.template).
+env_staged=$(printf '%s\n' "$staged" | grep -E '(^|/)\.env([._-][a-zA-Z0-9]+)*$' \
+  | grep -vE '\.(example|sample|template|dist)$' || true)
+if [ -n "$env_staged" ]; then
+  fail "env file(s) staged (secrets live here):"
+  printf '   %s\n' $env_staged >&2
+  problems=1
+fi
+
+# 2) Scan ADDED lines for secret patterns (exclude the hook itself, which contains the patterns).
+added=$(git diff --cached -U0 --diff-filter=ACM -- . ':(exclude).githooks/' \
+  | grep -E '^\+' | grep -vE '^\+\+\+' || true)
+
+# Strip obvious placeholders so we don't flag templates/examples.
+real=$(printf '%s\n' "$added" \
+  | grep -ivE 'your[_-]|<[a-z0-9_ -]+>|xxxx|changeme|example|placeholder|dummy|\bredacted\b|os\.getenv|getenv\(' || true)
+
+# 2a) Private keys
+if printf '%s\n' "$real" | grep -qE -- '-----BEGIN ([A-Z ]+ )?PRIVATE KEY-----'; then
+  fail "a PRIVATE KEY block is being committed"; problems=1
+fi
+# 2b) AWS access key id
+if printf '%s\n' "$real" | grep -qE 'AKIA[0-9A-Z]{16}'; then
+  fail "an AWS access key id is being committed"; problems=1
+fi
+# 2c) Secret-looking assignments: (api_key|secret|token|password|*_API_KEY) = <16+ token>
+if printf '%s\n' "$real" \
+   | grep -qiE '(api[_-]?key|secret|token|passwd|password|vision_agent_api_key|landingai_api_key)["'"'"' ]*[:=][ "'"'"']*[A-Za-z0-9/+_=.-]{16,}'; then
+  fail "a key/secret/token assignment with a real-looking value is being committed"
+  problems=1
+fi
+
+if [ "$problems" -ne 0 ]; then
+  echo "" >&2
+  echo "If this is a false positive, commit with --no-verify (use sparingly) and review first." >&2
+  exit 1
+fi
+exit 0
