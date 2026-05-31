@@ -69,6 +69,11 @@ extract / stack → grounded results in **Delta tables**. See [`databricks/`](da
 notebook (`lendstack_extract_job.py`) and setup. Runs **inside the customer's workspace**, so
 documents and extracted PII never leave their boundary.
 
+## Use it with your stack
+
+Step-by-step setup for **Claude, Databricks, Lyzr AI, LangGraph, and CrewAI** →
+[`docs/INTEGRATIONS.md`](docs/INTEGRATIONS.md).
+
 ## Stack profiles
 
 Default profiles (`mortgage`, `auto_indirect`, `auto_direct`) live in `stacking.py` and are
