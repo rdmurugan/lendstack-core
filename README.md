@@ -6,8 +6,6 @@ Ingest documents from any source → classify → **stack them in a configurable
 typed fields with **page-level provenance and confidence** → render a combined review package
 (PDF + JSON). Callable by Claude, or any MCP-speaking orchestrator. **Bring your own LandingAI key.**
 
-> Open-core, maintained by Infinidatum-LLC. Apache-2.0.
-
 ## Why
 
 Most document-AI wrappers hand you a blob of text. lendstack-core keeps every value **grounded**:
