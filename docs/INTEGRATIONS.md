@@ -1,6 +1,6 @@
-# Using lendstack-core with Claude, Databricks, Lyzr, LangGraph, and CrewAI
+# Using idpflow-core with Claude, Databricks, Lyzr, LangGraph, and CrewAI
 
-`lendstack-core` ships as an **MCP server** with 5 tools, plus a **Databricks batch job**. Any
+`idpflow-core` ships as an **MCP server** with 5 tools, plus a **Databricks batch job**. Any
 MCP-speaking orchestrator can drive it. This guide shows each.
 
 ## The 5 tools (same everywhere)
@@ -16,12 +16,12 @@ MCP-speaking orchestrator can drive it. This guide shows each.
 ## Prerequisites
 
 ```bash
-pip install git+https://github.com/rdmurugan/lendstack-core.git
+pip install git+https://github.com/rdmurugan/idpflow-core.git
 export VISION_AGENT_API_KEY=...   # your LandingAI key; omit for STUB mode (synthetic, free)
 ```
 
 **Two ways to run the server:**
-- **stdio** (local): the `lendstack-core` command. Best for desktop apps and local agents.
+- **stdio** (local): the `idpflow-core` command. Best for desktop apps and local agents.
 - **streamable-http** (remote): set `MCP_TRANSPORT=streamable-http` + OAuth env (see
   [`DEPLOY.md`](DEPLOY.md)). Best for hosted orchestrators. Reachable at `http://<host>:8080/mcp`.
 
@@ -36,8 +36,8 @@ Edit `claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "lendstack": {
-      "command": "lendstack-core",
+    "idpflow": {
+      "command": "idpflow-core",
       "env": { "VISION_AGENT_API_KEY": "your-key" }
     }
   }
@@ -60,7 +60,7 @@ Not MCP — the library runs directly in a notebook/job. Documents in a Unity Ca
 classify / extract / stack → Delta tables. See [`../databricks/`](../databricks/):
 
 ```python
-%pip install git+https://github.com/rdmurugan/lendstack-core.git
+%pip install git+https://github.com/rdmurugan/idpflow-core.git
 # set VISION_AGENT_API_KEY from a Databricks secret, point at a Volume, run -> Delta tables
 ```
 
@@ -91,10 +91,10 @@ from langgraph.prebuilt import create_react_agent
 
 async def main():
     client = MultiServerMCPClient({
-        "lendstack": {
+        "idpflow": {
             # local stdio:
             "transport": "stdio",
-            "command": "lendstack-core",
+            "command": "idpflow-core",
             "args": [],
             # or remote:
             # "transport": "streamable_http",
@@ -131,7 +131,7 @@ from mcp import StdioServerParameters
 
 # Local stdio:
 server_params = StdioServerParameters(
-    command="lendstack-core",
+    command="idpflow-core",
     args=[],
     env={"VISION_AGENT_API_KEY": os.environ["VISION_AGENT_API_KEY"], **os.environ},
 )
@@ -143,7 +143,7 @@ with MCPServerAdapter(server_params) as mcp_tools:
     processor = Agent(
         role="Loan document processor",
         goal="Extract and stack loan documents for an underwriter",
-        backstory="Operates lendstack-core to produce decision-ready packages.",
+        backstory="Operates idpflow-core to produce decision-ready packages.",
         tools=mcp_tools,
     )
     task = Task(

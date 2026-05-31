@@ -1,4 +1,4 @@
-# lendstack-core
+# idpflow-core
 
 **An MCP server for agentic document extraction + stacking, powered by [LandingAI ADE](https://va.landing.ai).**
 
@@ -8,7 +8,7 @@ typed fields with **page-level provenance and confidence** → render a combined
 
 ## Why
 
-Most document-AI wrappers hand you a blob of text. lendstack-core keeps every value **grounded**:
+Most document-AI wrappers hand you a blob of text. idpflow-core keeps every value **grounded**:
 
 - **ADE two-step done right** — `parse` (document → layout-aware markdown + grounded chunks with
   page/bbox) then `extract` (markdown + JSON schema → typed fields + source references). Each
@@ -37,8 +37,8 @@ pip install -e .
 cp .env.example .env        # add VISION_AGENT_API_KEY for live extraction
                             # (omit it to run in STUB mode — synthetic data, no API cost)
 
-lendstack-core              # stdio (Claude Desktop / local dev)
-npx @modelcontextprotocol/inspector lendstack-core
+idpflow-core              # stdio (Claude Desktop / local dev)
+npx @modelcontextprotocol/inspector idpflow-core
 ```
 
 Without `VISION_AGENT_API_KEY`, every tool works end-to-end with synthetic data so you can wire
@@ -49,12 +49,12 @@ up orchestration before spending a cent on ADE.
 ```bash
 OAUTH_ISSUER=https://your-tenant.us.auth0.com/ OAUTH_AUDIENCE=your-api \
 MCP_RESOURCE_URL=https://example.com/mcp \
-MCP_TRANSPORT=streamable-http lendstack-core
+MCP_TRANSPORT=streamable-http idpflow-core
 ```
 
 The server acts as an OAuth **resource server**, validating IdP-issued JWTs (static-token dev
 mode also supported). It **refuses to start** in remote mode without auth. Container:
-`docker build -t lendstack-core .`
+`docker build -t idpflow-core .`
 
 ## Security: enable the secret-guard hook (once per clone)
 
@@ -66,7 +66,7 @@ git config core.hooksPath .githooks   # blocks commits that stage .env or key/se
 
 Run the same pipeline as a Databricks job: documents in a Unity Catalog Volume → classify /
 extract / stack → grounded results in **Delta tables**. See [`databricks/`](databricks/) for the
-notebook (`lendstack_extract_job.py`) and setup. Runs **inside the customer's workspace**, so
+notebook (`idpflow_extract_job.py`) and setup. Runs **inside the customer's workspace**, so
 documents and extracted PII never leave their boundary.
 
 ## Use it with your stack

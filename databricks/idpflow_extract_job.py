@@ -1,20 +1,20 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # lendstack-core on Databricks
+# MAGIC # idpflow-core on Databricks
 # MAGIC
 # MAGIC Batch document extraction + stacking on the lakehouse. Reads documents from a Unity
-# MAGIC Catalog **Volume**, runs the same `lendstack-core` pipeline (classify -> ADE extract ->
+# MAGIC Catalog **Volume**, runs the same `idpflow-core` pipeline (classify -> ADE extract ->
 # MAGIC stack), and writes **grounded** results to governed **Delta tables**:
 # MAGIC
-# MAGIC - `<catalog>.<schema>.lendstack_extracted_fields` — one row per extracted field, with
+# MAGIC - `<catalog>.<schema>.idpflow_extracted_fields` — one row per extracted field, with
 # MAGIC   confidence + source page + grounded flag
-# MAGIC - `<catalog>.<schema>.lendstack_document_stacks` — one row per stacked document
+# MAGIC - `<catalog>.<schema>.idpflow_document_stacks` — one row per stacked document
 # MAGIC
 # MAGIC **Bring your own LandingAI key** (stored as a Databricks secret). Documents are grouped
 # MAGIC into "packages" by their immediate sub-folder under the volume path.
 
 # COMMAND ----------
-# MAGIC %pip install git+https://github.com/rdmurugan/lendstack-core.git
+# MAGIC %pip install git+https://github.com/rdmurugan/idpflow-core.git
 
 # COMMAND ----------
 dbutils.library.restartPython()
@@ -27,7 +27,7 @@ dbutils.widgets.text("catalog", "main", "Unity Catalog")
 dbutils.widgets.text("schema", "lending", "Schema")
 dbutils.widgets.text("volume_path", "/Volumes/main/lending/loan_docs", "Volume path with documents")
 dbutils.widgets.text("profile", "mortgage", "Stack profile (mortgage|auto_indirect|auto_direct)")
-dbutils.widgets.text("secret_scope", "lendstack", "Databricks secret scope")
+dbutils.widgets.text("secret_scope", "idpflow", "Databricks secret scope")
 dbutils.widgets.text("secret_key", "vision_agent_api_key", "Secret key for the LandingAI key")
 
 CATALOG = dbutils.widgets.get("catalog")
@@ -39,7 +39,7 @@ SECRET_KEY = dbutils.widgets.get("secret_key")
 
 import os
 
-# ADE key from Databricks secrets (never hard-code). Omit to run lendstack-core in STUB mode.
+# ADE key from Databricks secrets (never hard-code). Omit to run idpflow-core in STUB mode.
 try:
     os.environ["VISION_AGENT_API_KEY"] = dbutils.secrets.get(scope=SECRET_SCOPE, key=SECRET_KEY)
     print("LandingAI key loaded from secret scope.")
@@ -82,9 +82,9 @@ for pid, docs in list(packages.items())[:10]:
 # MAGIC %md ## Run the pipeline and assemble rows
 
 # COMMAND ----------
-from lendstack_core.ade_client import ADEClient
-from lendstack_core.package import build_package
-from lendstack_core.models import DocInput
+from idpflow_core.ade_client import ADEClient
+from idpflow_core.package import build_package
+from idpflow_core.models import DocInput
 
 ade = ADEClient()  # reads VISION_AGENT_API_KEY from env; stub if absent
 
@@ -130,8 +130,8 @@ print(f"{len(field_rows)} field rows, {len(stack_rows)} stack rows")
 # MAGIC %md ## Write to governed Delta tables
 
 # COMMAND ----------
-fields_tbl = f"{CATALOG}.{SCHEMA}.lendstack_extracted_fields"
-stacks_tbl = f"{CATALOG}.{SCHEMA}.lendstack_document_stacks"
+fields_tbl = f"{CATALOG}.{SCHEMA}.idpflow_extracted_fields"
+stacks_tbl = f"{CATALOG}.{SCHEMA}.idpflow_document_stacks"
 
 if field_rows:
     spark.createDataFrame(field_rows).write.mode("overwrite").option(
@@ -159,8 +159,8 @@ from pyspark.sql.types import StringType
 @pandas_udf(StringType())
 def extract_doc_json(file_paths: pd.Series, doc_types: pd.Series) -> pd.Series:
     import json
-    from lendstack_core.ade_client import ADEClient
-    from lendstack_core.models import DocType
+    from idpflow_core.ade_client import ADEClient
+    from idpflow_core.models import DocType
     client = ADEClient()  # one client per task
     out = []
     for fp, dt in zip(file_paths, doc_types):

@@ -4,7 +4,7 @@ Runnable examples for each integration. All work in **stub mode** (no `VISION_AG
 so you can try them free; set the key for live extraction.
 
 ```bash
-pip install -e .                       # or: pip install lendstack-core
+pip install -e .                       # or: pip install idpflow-core
 python examples/make_sample_docs.py    # writes a synthetic loan package
 ```
 

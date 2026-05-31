@@ -1,6 +1,6 @@
-"""Use lendstack-core's MCP tools inside a LangGraph agent.
+"""Use idpflow-core's MCP tools inside a LangGraph agent.
 
-    pip install lendstack-core langchain-mcp-adapters langgraph langchain-openai
+    pip install idpflow-core langchain-mcp-adapters langgraph langchain-openai
     export OPENAI_API_KEY=...           # for the agent LLM
     export VISION_AGENT_API_KEY=...     # optional; omit for stub mode
     python examples/make_sample_docs.py
@@ -20,9 +20,9 @@ DOCS = sorted(glob.glob(str(Path(__file__).parent / "sample_docs" / "LN-DEMO-1" 
 async def main() -> None:
     client = MultiServerMCPClient(
         {
-            "lendstack": {
+            "idpflow": {
                 "transport": "stdio",
-                "command": "lendstack-core",
+                "command": "idpflow-core",
                 "args": [],
                 # Remote instead:
                 # "transport": "streamable_http",

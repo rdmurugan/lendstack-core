@@ -1,6 +1,6 @@
-"""Use lendstack-core's MCP tools inside a CrewAI crew.
+"""Use idpflow-core's MCP tools inside a CrewAI crew.
 
-    pip install lendstack-core crewai 'crewai-tools[mcp]'
+    pip install idpflow-core crewai 'crewai-tools[mcp]'
     export OPENAI_API_KEY=...           # for the agent LLM
     export VISION_AGENT_API_KEY=...     # optional; omit for stub mode
     python examples/make_sample_docs.py
@@ -21,7 +21,7 @@ DOCS = sorted(glob.glob(str(Path(__file__).parent / "sample_docs" / "LN-DEMO-1" 
 #   server_params = {"url": "https://your-host/mcp", "transport": "streamable-http",
 #                    "headers": {"Authorization": "Bearer <token>"}}
 server_params = StdioServerParameters(
-    command="lendstack-core", args=[], env=dict(os.environ)
+    command="idpflow-core", args=[], env=dict(os.environ)
 )
 
 
@@ -30,7 +30,7 @@ def main() -> None:
         processor = Agent(
             role="Loan document processor",
             goal="Extract and stack loan documents into a reviewable package",
-            backstory="Operates lendstack-core to produce decision-ready document packages.",
+            backstory="Operates idpflow-core to produce decision-ready document packages.",
             tools=mcp_tools,
             verbose=True,
         )

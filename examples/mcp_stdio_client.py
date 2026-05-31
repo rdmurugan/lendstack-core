@@ -1,8 +1,8 @@
-"""Drive lendstack-core as an MCP server over stdio, using the MCP client SDK.
+"""Drive idpflow-core as an MCP server over stdio, using the MCP client SDK.
 
 This is what Claude / any MCP client does under the hood.
 
-    pip install lendstack-core            # provides the `lendstack-core` command
+    pip install idpflow-core            # provides the `idpflow-core` command
     python examples/make_sample_docs.py
     python examples/mcp_stdio_client.py
 
@@ -20,8 +20,8 @@ from mcp.client.stdio import stdio_client
 DOCS = sorted(glob.glob(str(Path(__file__).parent / "sample_docs" / "LN-DEMO-1" / "*.pdf")))
 
 # Launch the installed console script. (Alternatively: command=sys.executable,
-# args=["-m", "lendstack_core.server"] if running from a source checkout.)
-SERVER = StdioServerParameters(command="lendstack-core", args=[], env=dict(os.environ))
+# args=["-m", "idpflow_core.server"] if running from a source checkout.)
+SERVER = StdioServerParameters(command="idpflow-core", args=[], env=dict(os.environ))
 
 
 async def main() -> None:

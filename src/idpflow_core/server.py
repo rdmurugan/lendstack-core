@@ -1,4 +1,4 @@
-"""lendstack-core — agentic document extraction + stacking over LandingAI ADE, as an MCP server.
+"""idpflow-core — agentic document extraction + stacking over LandingAI ADE, as an MCP server.
 
 Transport:
   - stdio (default): local dev / Claude Desktop.
@@ -39,7 +39,7 @@ load_dotenv()
 _token_verifier, _auth_settings = build_auth()
 
 mcp = FastMCP(
-    "lendstack-core",
+    "idpflow-core",
     instructions=(
         "Document extraction + stacking over LandingAI ADE. Extract typed fields with "
         "confidence + page-level provenance, classify documents, stack them in a configurable "

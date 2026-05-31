@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Secret-guard pre-commit hook for lendstack-core.
+# Secret-guard pre-commit hook for idpflow-core.
 # Blocks commits that stage .env files or contain key/secret-looking values.
 # Enable once per clone:  git config core.hooksPath .githooks
 set -u

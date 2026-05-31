@@ -1,4 +1,4 @@
-# lendstack-core — remote MCP server (streamable HTTP) for Claude Marketplace / Connectors.
+# idpflow-core — remote MCP server (streamable HTTP) for Claude Marketplace / Connectors.
 FROM python:3.12-slim AS base
 
 ENV PYTHONUNBUFFERED=1 \
@@ -23,4 +23,4 @@ EXPOSE 8080
 
 # OAuth must be configured at runtime (OAUTH_ISSUER/AUDIENCE/MCP_RESOURCE_URL) or the
 # server refuses to start in remote mode. See docs/DEPLOY.md.
-CMD ["lendstack-core"]
+CMD ["idpflow-core"]

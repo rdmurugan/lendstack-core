@@ -1,4 +1,4 @@
-"""Use lendstack-core directly (no orchestrator). The simplest way in.
+"""Use idpflow-core directly (no orchestrator). The simplest way in.
 
     python examples/make_sample_docs.py
     python examples/direct_library.py
@@ -9,9 +9,9 @@ Runs in STUB mode without VISION_AGENT_API_KEY (synthetic data, no API cost).
 import glob
 from pathlib import Path
 
-from lendstack_core.models import DocInput
-from lendstack_core.package import build_package
-from lendstack_core.render import render_package
+from idpflow_core.models import DocInput
+from idpflow_core.package import build_package
+from idpflow_core.render import render_package
 
 DOCS = sorted(glob.glob(str(Path(__file__).parent / "sample_docs" / "LN-DEMO-1" / "*.pdf")))
 

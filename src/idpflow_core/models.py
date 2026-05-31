@@ -1,4 +1,4 @@
-"""Pydantic models for lendstack-core.
+"""Pydantic models for idpflow-core.
 
 Generic document-extraction + stacking models. EVERY extracted value carries grounding
 (source references) and, where the parse step provides it, confidence + page/bbox — so

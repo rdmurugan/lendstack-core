@@ -1,22 +1,22 @@
-# lendstack-core on Databricks
+# idpflow-core on Databricks
 
 Run the document extraction + stacking pipeline as a **lakehouse batch job**: documents in a
 Unity Catalog Volume → classify / extract / stack → grounded results in Delta tables. Same
-`lendstack-core` library as the MCP server; this is the batch/at-scale runtime.
+`idpflow-core` library as the MCP server; this is the batch/at-scale runtime.
 
 ## What it produces
 
 | Table | Grain |
 |---|---|
-| `<catalog>.<schema>.lendstack_extracted_fields` | one row per extracted field (value, confidence, page, grounded, needs_review) |
-| `<catalog>.<schema>.lendstack_document_stacks` | one row per stacked document (position, doc_type, review_required) |
+| `<catalog>.<schema>.idpflow_extracted_fields` | one row per extracted field (value, confidence, page, grounded, needs_review) |
+| `<catalog>.<schema>.idpflow_document_stacks` | one row per stacked document (position, doc_type, review_required) |
 
 ## Setup
 
 1. **Store your LandingAI key as a Databricks secret** (never hard-code it):
    ```bash
-   databricks secrets create-scope lendstack
-   databricks secrets put-secret lendstack vision_agent_api_key
+   databricks secrets create-scope idpflow
+   databricks secrets put-secret idpflow vision_agent_api_key
    ```
    Omit this to run in **stub mode** (synthetic data, no API cost) to validate the flow first.
 
@@ -27,10 +27,10 @@ Unity Catalog Volume → classify / extract / stack → grounded results in Delt
      LN-2026-0002/  (...)
    ```
 
-3. **Import `lendstack_extract_job.py`** as a notebook (it's in Databricks source format) and
+3. **Import `idpflow_extract_job.py`** as a notebook (it's in Databricks source format) and
    set the widgets: `catalog`, `schema`, `volume_path`, `profile`, `secret_scope`, `secret_key`.
 
-4. **Run.** It `%pip install`s `lendstack-core` from GitHub, processes each package, and writes
+4. **Run.** It `%pip install`s `idpflow-core` from GitHub, processes each package, and writes
    the two Delta tables. Schedule it as a Databricks Job for recurring batches.
 
 ## Scale
@@ -48,4 +48,4 @@ deploy-in-the-customer's-environment posture as the remote MCP server.
 
 - Requires Databricks Runtime with Unity Catalog. The volume path is a FUSE mount, so plain
   Python file I/O works.
-- Until `lendstack-core` is published to PyPI, the notebook installs it from the Git repo.
+- Until `idpflow-core` is published to PyPI, the notebook installs it from the Git repo.
