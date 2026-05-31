@@ -62,6 +62,13 @@ mode also supported). It **refuses to start** in remote mode without auth. Conta
 git config core.hooksPath .githooks   # blocks commits that stage .env or key/secret values
 ```
 
+## Databricks (batch / lakehouse)
+
+Run the same pipeline as a Databricks job: documents in a Unity Catalog Volume → classify /
+extract / stack → grounded results in **Delta tables**. See [`databricks/`](databricks/) for the
+notebook (`lendstack_extract_job.py`) and setup. Runs **inside the customer's workspace**, so
+documents and extracted PII never leave their boundary.
+
 ## Stack profiles
 
 Default profiles (`mortgage`, `auto_indirect`, `auto_direct`) live in `stacking.py` and are
