@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>idpflow-core — Document AI you can audit</title>
+<meta name="description" content="Open-source MCP server for Intelligent Document Processing on LandingAI ADE. Ingest, classify, stack, and extract documents with grounded provenance. Works with Claude, Lyzr, LangGraph, CrewAI, and Databricks. Apache-2.0." />
+<meta property="og:title" content="idpflow-core — Document AI you can audit" />
+<meta property="og:description" content="Grounded, MCP-first document processing for regulated finance and healthcare. Open source, Apache-2.0." />
+<meta property="og:type" content="website" />
+<style>
+  :root{
+    --teal:#1FB5A8; --teal-d:#159187; --ink:#0f172a; --slate:#475569;
+    --mute:#64748b; --line:#e2e8f0; --bg:#ffffff; --bg2:#f8fafc; --code:#0b1220;
+    --radius:14px; --maxw:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--teal-d);text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .btn{display:inline-block;padding:13px 22px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid transparent;cursor:pointer;transition:.15s}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-primary:hover{background:var(--teal-d)}
+  .btn-ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--teal)}
+  .eyebrow{color:var(--teal-d);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:13px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink)}
+  .dot{width:12px;height:12px;border-radius:3px;background:var(--teal);display:inline-block;transform:rotate(45deg)}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{color:var(--slate);font-weight:500;font-size:15px}
+  .nav-links a:hover{color:var(--ink)}
+  @media(max-width:760px){.nav-links a:not(.btn){display:none}}
+
+  /* hero */
+  .hero{padding:72px 0 56px;background:radial-gradient(1100px 420px at 70% -10%, #e6fbf8 0%, #fff 60%)}
+  .hero h1{font-size:46px;line-height:1.1;margin:14px 0 16px;letter-spacing:-.02em}
+  .hero h1 .hl{color:var(--teal-d)}
+  .hero p.lead{font-size:19px;color:var(--slate);max-width:640px;margin:0 0 26px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .pill-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+  .pill{font-size:13px;color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:#fff}
+  @media(max-width:760px){.hero h1{font-size:34px}}
+
+  /* code */
+  pre{background:var(--code);color:#e2e8f0;border-radius:12px;padding:18px 20px;overflow:auto;font-size:13.5px;line-height:1.7;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0}
+  pre .c{color:#7c8aa5}
+  pre .g{color:#5ee2cf}
+
+  /* sections */
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  h2{font-size:30px;letter-spacing:-.01em;margin:8px 0 10px}
+  .sub{color:var(--slate);max-width:680px;margin:0 0 34px;font-size:17px}
+
+  /* pipeline */
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  .step{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .step .n{width:28px;height:28px;border-radius:8px;background:var(--teal);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .step h4{margin:12px 0 6px;font-size:16px}
+  .step p{margin:0;color:var(--mute);font-size:14px}
+  @media(max-width:860px){.flow{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.flow{grid-template-columns:1fr}}
+
+  /* feature grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:var(--radius);padding:22px;background:#fff;transition:.15s}
+  .card:hover{border-color:var(--teal);box-shadow:0 6px 24px rgba(31,181,168,.08)}
+  .card .ic{width:38px;height:38px;border-radius:9px;background:#e6fbf8;color:var(--teal-d);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+  .card h4{margin:14px 0 7px;font-size:17px}
+  .card p{margin:0;color:var(--slate);font-size:14.5px}
+
+  .two{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:start}
+  @media(max-width:820px){.two{grid-template-columns:1fr}}
+  ul.check{list-style:none;padding:0;margin:0}
+  ul.check li{padding:9px 0 9px 30px;position:relative;color:var(--slate)}
+  ul.check li:before{content:"";position:absolute;left:0;top:14px;width:14px;height:8px;border-left:2px solid var(--teal);border-bottom:2px solid var(--teal);transform:rotate(-45deg)}
+  ul.check li b{color:var(--ink)}
+
+  .usecases{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:820px){.usecases{grid-template-columns:1fr}}
+
+  .note{background:#fffaf0;border:1px solid #f4e3c1;border-radius:12px;padding:14px 18px;color:#7a5b18;font-size:14.5px;margin-top:18px}
+
+  footer{padding:42px 0;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+  .footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  .works{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 14px;font-weight:600;font-size:14px;color:var(--ink)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span> idpflow-core</div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#governance">Governance</a>
+      <a href="#usecases">Use cases</a>
+      <a href="#start">Get started</a>
+      <a class="btn btn-primary" href="https://github.com/rdmurugan/idpflow-core" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Intelligent Document Processing · Open source</div>
+    <h1>Document AI you can <span class="hl">audit</span>.</h1>
+    <p class="lead">An MCP server that ingests documents from anywhere, classifies them, stacks them in your reviewer's exact order, and extracts fields with grounded, page-level provenance. Built on LandingAI ADE, for regulated finance and healthcare.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#start">Get started in 60 seconds</a>
+      <a class="btn btn-ghost" href="https://github.com/rdmurugan/idpflow-core" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+    <div class="pill-row">
+      <span class="pill">Apache-2.0</span>
+      <span class="pill">Stub mode, no API key needed</span>
+      <span class="pill">OAuth 2.1 remote</span>
+      <span class="pill">Bring your own LandingAI key</span>
+    </div>
+  </div>
+</header>
+
+<section style="border-top:none;padding-top:34px">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:14px">Works with</div>
+    <div class="works">
+      <span class="chip">Claude</span>
+      <span class="chip">Lyzr AI</span>
+      <span class="chip">LangGraph</span>
+      <span class="chip">CrewAI</span>
+      <span class="chip">Databricks</span>
+      <span class="chip">any MCP client</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The problem</div>
+    <h2>Regulated teams drown in paperwork they can't safely automate.</h2>
+    <p class="sub">Loan files, claims, intake packets. A pile of PDFs that someone has to read, sort, key in, and sign off on. A wrong field isn't a typo, it's a compliance event. Traditional OCR gives you a wall of text. Fluent LLMs give you confident answers with no way to check them. Neither is something you can put in front of an examiner.</p>
+  </div>
+</section>
+
+<section id="how" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="eyebrow">How it works</div>
+    <h2>One grounded pipeline, five steps.</h2>
+    <p class="sub">Documents in from any source, a review-ready package out. Every grounded value points back to its page and box, and anything ungrounded is flagged for a human.</p>
+    <div class="flow">
+      <div class="step"><div class="n">1</div><h4>Ingest</h4><p>From an upload portal, SFTP/S3, email, or an export. Source-agnostic.</p></div>
+      <div class="step"><div class="n">2</div><h4>Classify</h4><p>Detect each document's type to pick the right schema and stack slot.</p></div>
+      <div class="step"><div class="n">3</div><h4>Extract</h4><p>LandingAI ADE returns typed fields with page, box, and confidence on grounded values.</p></div>
+      <div class="step"><div class="n">4</div><h4>Stack</h4><p>Order the set exactly the way your reviewer expects. Configurable per use case.</p></div>
+      <div class="step"><div class="n">5</div><h4>Render</h4><p>A combined PDF cover sheet tied to source pages, plus a JSON sidecar.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Why it's different</div>
+    <h2>Grounding is the audit signal.</h2>
+    <p class="sub">Built on the one idea that makes document AI usable where the stakes are real: a machine-read value should always point back to where it came from.</p>
+    <div class="grid">
+      <div class="card"><div class="ic">◎</div><h4>Grounded provenance</h4><p>Grounded values carry page, bounding box, and confidence. Examinable by default.</p></div>
+      <div class="card"><div class="ic">⚑</div><h4>Flag, don't guess</h4><p>Ungrounded or low-confidence values are flagged for human review, not trusted silently.</p></div>
+      <div class="card"><div class="ic">⌥</div><h4>Configurable stacking</h4><p>Assemble any document set into the exact order a reviewer wants.</p></div>
+      <div class="card"><div class="ic">⧉</div><h4>Source-agnostic</h4><p>Works on any list of files, however they arrived. Connectors are thin adapters.</p></div>
+      <div class="card"><div class="ic">⚙</div><h4>Portable by design</h4><p>One MCP core, called from Claude, Lyzr, LangGraph, CrewAI, or run on Databricks.</p></div>
+      <div class="card"><div class="ic">⊘</div><h4>No autonomous decisions</h4><p>It outputs data and a review queue. It never approves, denies, scores, or ranks.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="governance" style="background:var(--bg2)">
+  <div class="wrap two">
+    <div>
+      <div class="eyebrow">Governance</div>
+      <h2>The posture regulated work expects, in the architecture.</h2>
+      <p class="sub">Not promised on a slide. The properties an auditor cares about are structural.</p>
+      <ul class="check">
+        <li><b>Provenance on grounded values</b> gives an examinable audit trail.</li>
+        <li><b>Human-in-the-loop.</b> A person decides; the system prepares the file.</li>
+        <li><b>OAuth 2.1</b> on the remote server. It refuses to start unauthenticated.</li>
+        <li><b>Run it in your own environment</b>, your cloud or your Databricks workspace.</li>
+      </ul>
+      <div class="note"><b>One honest caveat:</b> live extraction calls LandingAI ADE, a third-party API, so documents are sent there for parsing. Stub mode is fully local, and LandingAI offers on-prem / VPC options where that step must stay inside. This is design-aligned for regulated use, not a compliance certification.</div>
+    </div>
+    <div>
+      <pre><span class="c"># A grounded field comes back like this</span>
+{
+  "name": "borrower.income",
+  "value": "6,500.00",
+  <span class="g">"grounded": true</span>,
+  <span class="g">"confidence": 0.98</span>,
+  "source_doc": "paystub",
+  <span class="g">"page": 1</span>,
+  "needs_review": false
+}
+
+<span class="c"># An ungrounded value is surfaced, not trusted</span>
+{ "name": "account.holder",
+  <span class="g">"grounded": false</span>,
+  <span class="g">"needs_review": true</span> }</pre>
+    </div>
+  </div>
+</section>
+
+<section id="usecases">
+  <div class="wrap">
+    <div class="eyebrow">Who it's for</div>
+    <h2>Same shape underneath, across regulated work.</h2>
+    <p class="sub">The pattern that orders a mortgage credit file orders a healthcare intake or a claims packet.</p>
+    <div class="usecases">
+      <div class="card"><div class="ic">$</div><h4>Lending &amp; banking</h4><p>Stack a credit file (1003, paystubs, W-2, bank statements, ID), extract income, identity, and collateral fields with provenance, hand a reviewer a decision-ready package.</p></div>
+      <div class="card"><div class="ic">+</div><h4>Healthcare ops</h4><p>Order an intake, prior-auth, or claims packet, extract the fields a reviewer needs, flag anything ungrounded.</p></div>
+      <div class="card"><div class="ic">▣</div><h4>Any regulated back office</h4><p>Turn a folder of PDFs into stacked, grounded, audit-ready data your team can act on.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="start" style="background:var(--bg2)">
+  <div class="wrap two">
+    <div>
+      <div class="eyebrow">Get started</div>
+      <h2>Try the whole pipeline in a minute, free.</h2>
+      <p class="sub">No API key required. Stub mode runs the full pipeline on synthetic data so you can wire it up before spending a cent on ADE. Add your LandingAI key for live extraction.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/rdmurugan/idpflow-core" target="_blank" rel="noopener">Star on GitHub</a>
+        <a class="btn btn-ghost" href="https://github.com/rdmurugan/idpflow-core/blob/main/docs/INTEGRATIONS.md" target="_blank" rel="noopener">Integration guides</a>
+      </div>
+    </div>
+    <div>
+      <pre><span class="c"># clone, install, run, no key needed</span>
+git clone https://github.com/rdmurugan/idpflow-core.git
+cd idpflow-core
+python3.12 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -e .
+
+python examples/make_sample_docs.py
+python examples/direct_library.py   <span class="c"># stub mode, free</span></pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="text-align:center">
+    <div class="eyebrow">Open source</div>
+    <h2>Built in the open. PRs welcome.</h2>
+    <p class="sub" style="margin:0 auto 26px">Apache-2.0. Especially looking for new stacking profiles, extraction schemas, and connectors from people in lending, banking, and healthcare ops. Tell me what documents you're drowning in.</p>
+    <a class="btn btn-primary" href="https://github.com/rdmurugan/idpflow-core" target="_blank" rel="noopener">Contribute on GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer">
+    <div><span class="dot"></span> &nbsp;<b>idpflow-core</b> · Apache-2.0 · Built on <a href="https://va.landing.ai" target="_blank" rel="noopener">LandingAI ADE</a></div>
+    <div><a href="https://github.com/rdmurugan/idpflow-core" target="_blank" rel="noopener">github.com/rdmurugan/idpflow-core</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
